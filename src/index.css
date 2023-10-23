@@ -1,13 +1,25 @@
+@import '~bootstrap/dist/css/bootstrap.css';
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital@0;1&display=swap');
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'Poppins', sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--BackgroundColor);
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+:root {
+  --primaryColor: #146C94;
+  --BackgroundColor: #f8f8f7;
+}
+
+
+.MuiDataGrid-root .MuiDataGrid-cell {
+  /* color: tomato; */
+  /* work */
+  white-space: 'normal' !important;
+  /* don't work */
+  word-wrap: 'break-word' !important;
+  /* don't work */
 }

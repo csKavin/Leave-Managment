@@ -1,25 +1,43 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Suspense, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { Themes } from './Helpers/themes';
+import { Outlet } from "react-router-dom";
+import { setAuthToken } from './Apiservice/apiservice';
+const Login = React.lazy(() => import('./Pages/Login'));
+const SignUp = React.lazy(() => import('./Pages/Signup'));
+const Dashboard = React.lazy(() => import('./Pages/Dashboard'));
+const SideNavigation = React.lazy(() => import('./Pages/SideNavigation'));
+const EmployeeSection = React.lazy(() => import('./Pages/EmployeeSection'));
+const LeaveTypes = React.lazy(() => import('./Pages/Leavetypes'));
+const ApplyLeave = React.lazy(() => import('./Pages/ApplyLeave'));
+const LeaveHistory = React.lazy(() => import('./Pages/LeaveHistory'));
+const PendingRequest = React.lazy(() => import('./Pages/PendingRequest'));
 
 function App() {
+  const token = localStorage.getItem("accessToken")
+  useEffect(() => { setAuthToken(token) }, [token])
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Themes>
+      <Suspense>
+        <Routes>
+          <Route path='/' element={<Login />} />
+          <Route path='/signup' element={<SignUp />} />
+          {token &&
+            <Route element={<SideNavigation> <Outlet /> </SideNavigation>}>
+              {/* manager login */}
+              <Route path='/dashboard' element={<Dashboard />} />
+              <Route path='/leavetypes' element={<LeaveTypes />} />
+              <Route path='/employee' element={<EmployeeSection />} />
+              <Route path='/pending' element={<PendingRequest />} />
+              <Route path='/approve' element={<EmployeeSection />} />
+              <Route path='/declined' element={<EmployeeSection />} />
+              {/* employee login */}
+              <Route path='/applyleave' element={<ApplyLeave />} />
+              <Route path='/leavehistory' element={<LeaveHistory />} />
+            </Route>}
+        </Routes>
+      </Suspense>
+    </Themes>
   );
 }
 
