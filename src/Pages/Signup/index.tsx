@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: any) => ({
 }));
 
 interface signUp {
-    userName: string,
+    username: string,
     userEmail: string,
     confrimPassword: string,
     createPassword: string
@@ -53,7 +53,7 @@ const SignUp = () => {
     const navigate = useNavigate();
     const [loader, setLoader] = useState(false)
     const [signUp, setSignUp] = useState<signUp>({
-        userName: '',
+        username: '',
         userEmail: '',
         createPassword: '',
         confrimPassword: ''
@@ -70,7 +70,7 @@ const SignUp = () => {
     const handleSignUp = () => {
         setLoader(true);
         let payload = {
-            userName: signUp.userName,
+            username: signUp.username,
             email: signUp.userEmail,
             password: signUp.confrimPassword,
             role: "employee"
@@ -110,7 +110,7 @@ const SignUp = () => {
                 <div className='px-4'>
                     <>
                         <div className='pb-2 mt-4' >User Name</div>
-                        <TextField className='w-100' placeholder='Eg.Tsquaredc' name="userName" onChange={handleChange} required />
+                        <TextField className='w-100' placeholder='Eg.Tsquaredc' name="username" onChange={handleChange} required />
                         <div className='pb-2 mt-4'>User Email</div>
                         <TextField className='w-100' placeholder='Eg.test@tsquaredc.com' name="userEmail" onChange={handleChange} required />
                         <div className='pb-2 mt-4'>Create Password</div>

@@ -12,6 +12,8 @@ const LeaveTypes = React.lazy(() => import('./Pages/Leavetypes'));
 const ApplyLeave = React.lazy(() => import('./Pages/ApplyLeave'));
 const LeaveHistory = React.lazy(() => import('./Pages/LeaveHistory'));
 const PendingRequest = React.lazy(() => import('./Pages/PendingRequest'));
+const ApprovedRequest = React.lazy(() => import('./Pages/ApprovedRequest'));
+const RejectedList = React.lazy(() => import('./Pages/RejectedList'));
 
 function App() {
   const token = localStorage.getItem("accessToken")
@@ -29,8 +31,8 @@ function App() {
               <Route path='/leavetypes' element={<LeaveTypes />} />
               <Route path='/employee' element={<EmployeeSection />} />
               <Route path='/pending' element={<PendingRequest />} />
-              <Route path='/approve' element={<EmployeeSection />} />
-              <Route path='/declined' element={<EmployeeSection />} />
+              <Route path='/approve' element={<ApprovedRequest />} />
+              <Route path='/declined' element={<RejectedList />} />
               {/* employee login */}
               <Route path='/applyleave' element={<ApplyLeave />} />
               <Route path='/leavehistory' element={<LeaveHistory />} />

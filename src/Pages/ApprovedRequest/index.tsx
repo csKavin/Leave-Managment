@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { pendingRequest, approveLeave, rejectLeave } from '../../Apiservice/apiservice';
+import { pendingRequest, approveLeave } from '../../Apiservice/apiservice';
 import { DataGrid, GridColDef, GridValueGetterParams, GridRowParams } from '@mui/x-data-grid';
 import { Button, Typography, TextField, Grid } from '@mui/material';
 import Modal from '@mui/material/Modal';
@@ -62,36 +62,13 @@ const PendingRequest = () => {
                     createdAt: response.createdAt,
                     user_name: response.user_name,
                     email: response.email
-                })).filter((item: any) => item.status.toLowerCase() === "pending");
+                })).filter((item: any) => item.status.toLowerCase() === "approved");
                 setRows(tempArray)
             })
             .catch((err) => {
                 console.log(err);
             })
     }, [10000])
-
-    const handleAcceptLeave = (id: string) => {
-        approveLeave(id)
-            .then((res) => {
-                if (res.data) {
-                    alert("Approved Succesfully")
-                }
-            })
-            .catch((err) => {
-                alert("Please try again later")
-            })
-    }
-    const handleRejectLeave = (id: string) => {
-        rejectLeave(id)
-            .then((res) => {
-                if (res.data) {
-                    alert("Rejected Succesfully")
-                }
-            })
-            .catch((err) => {
-                alert("Please try again later")
-            })
-    }
 
     const columns: GridColDef[] = [
         { field: 'id', headerName: 'S.N', width: 10 },
@@ -120,7 +97,7 @@ const PendingRequest = () => {
             description: 'This column has a value getter and is not sortable.',
             width: 200,
             renderCell: (params) => (
-                <div style={{ color: 'red' }} className='text-center p-2'>
+                <div style={{ color: 'green' }} className='text-center p-2'>
                     {params.row.status}
                 </div>
             )
@@ -141,7 +118,7 @@ const PendingRequest = () => {
 
     return (
         <React.Fragment>
-            <Typography sx={{ flexGrow: 1, color: 'theme.main', fontWeight: 'bold' }}>Pending Request</Typography>
+            <Typography sx={{ flexGrow: 1, color: 'theme.main', fontWeight: 'bold' }}>Approved Request</Typography>
             <div className='d-flex justify-content-end gap-3 align-items-center'>
                 <Typography className='fw-bold' sx={{ color: 'theme.main' }} >Search</Typography>
                 <TextField placeholder='By name' onChange={handleChange} />
@@ -164,7 +141,7 @@ const PendingRequest = () => {
                         // setRowSelectionModel(newRowSelectionModel);
                         console.log(newRowSelectionModel);
                     }}
-                /> : <Typography className='text-center'>No pending leave request</Typography>
+                /> : <Typography className='text-center'>No Approved leave request</Typography>
                 }
 
             </div>
@@ -209,10 +186,6 @@ const PendingRequest = () => {
                             <Typography >{data.leave_type}</Typography>
                         </Grid>
                     </Grid>
-                    <div className='d-flex justify-content-end gap-3'>
-                        <Button onClick={() => handleRejectLeave(data._id)}>Reject</Button>
-                        <Button onClick={() => handleAcceptLeave(data._id)}>Approve</Button>
-                    </div>
                 </Box>
             </Modal>
         </React.Fragment>

@@ -4,7 +4,7 @@ import { Box, Button, Card, Grid, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import loginPage from '../../Assests/bglogin.jpg';
 import companyLogo from '../../Assests/companyLogoBg.png';
-import {  userLogin, setAuthToken } from '../../Apiservice/apiservice';
+import { userLogin, setAuthToken } from '../../Apiservice/apiservice';
 import Loader from '../../Components/Loader';
 
 
@@ -65,7 +65,7 @@ const Index = () => {
         userLogin(login)
             .then((res) => {
                 const { accessToken, userDetails } = res.data;
-                const { role, userName } = userDetails;
+                const { role, userName, userId, email } = userDetails;
                 if (role == "manager") {
                     navigate('/dashboard')
                 }
@@ -73,9 +73,11 @@ const Index = () => {
                     navigate('/applyleave')
                 }
                 localStorage.setItem("accessToken", accessToken)
+                localStorage.setItem("userId", userId)
                 setAuthToken(accessToken);
                 localStorage.setItem("LogIn", role)
                 localStorage.setItem("userName", userName)
+                localStorage.setItem("email", email)
                 setLoader(false);
             })
             .catch((err) => {

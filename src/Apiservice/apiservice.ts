@@ -8,7 +8,7 @@ interface ILogin {
 }
 
 interface ISignUp {
-    userName: string,
+    username: string,
     email: string,
     password: string,
     role: string
@@ -19,6 +19,8 @@ interface IApplyLeave {
     end_date: string,
     leave_type: string,
     description: string,
+    user_name: string,
+    email: string
 }
 
 const instance = axios.create({
@@ -60,7 +62,21 @@ export const applyLeave = async (payload: IApplyLeave): Promise<AxiosResponse> =
 
 //Pending Request  
 export const pendingRequest = async (): Promise<AxiosResponse> => {
-    const path = `/api/contacts/allContact`;
+    const path = `/api/contacts/all`;
     const res: AxiosResponse = await instance.get(path);
+    return res;
+}
+
+//update leave 
+export const approveLeave = async (id : string):  Promise<AxiosResponse> => {
+    const path = `/api/contacts/${id}`;
+    const res: AxiosResponse = await instance.put(path);
+    return res;
+}
+
+//update leave 
+export const rejectLeave = async (id : string):  Promise<AxiosResponse> => {
+    const path = `/api/contacts/reject/${id}`;
+    const res: AxiosResponse = await instance.put(path);
     return res;
 }

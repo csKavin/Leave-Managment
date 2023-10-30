@@ -25,6 +25,8 @@ interface IApplyLeave {
     end_date: string | any,
     leave_type: string,
     description: string,
+    user_name : string | any,
+    email : string | any
 }
 
 const ApplyLeave = () => {
@@ -33,6 +35,8 @@ const ApplyLeave = () => {
     const [startDate, setStartDate] = React.useState<string | null>(null);
     const [endDate, setEndDate] = React.useState<string | null>(null);
     const [description, setDescription] = React.useState<string>('');
+    const userName = localStorage.getItem("userName");
+    const email = localStorage.getItem("email");
 
     const handleStartDate = (date: any) => {
         setStartDate(date.toString());
@@ -53,11 +57,16 @@ const ApplyLeave = () => {
             end_date: endDate,
             leave_type: type,
             description: description,
+            user_name : userName,
+            email : email
         }
         applyLeave(payload)
             .then((res) => {
-                alert("Leave Applied Successfully")
-                console.log(res);
+                if(res.data){
+                    alert("Leave Applied Successfully")
+                    console.log(res);
+                }
+                
             })
             .catch((err) => {
                 console.log(err);
