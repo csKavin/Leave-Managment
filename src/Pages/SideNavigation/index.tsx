@@ -101,14 +101,14 @@ const SideNavigation: React.FunctionComponent<ISideNavigation> = ({ children, wi
                         <ListItemText primary={'Leave Types'} />
                     </ListItemButton>
                 </ListItem>
-                <ListItem disablePadding sx={{ borderLeft: url[1] == "employee" ? '3px solid white' : 'none' }} className='mt-2'>
+                {/* <ListItem disablePadding sx={{ borderLeft: url[1] == "employee" ? '3px solid white' : 'none' }} className='mt-2'>
                     <ListItemButton onClick={() => handleRoutes('employee')}>
                         <ListItemIcon>
                             <AccountBoxRoundedIcon sx={{ color: 'white' }} />
                         </ListItemIcon>
                         <ListItemText primary={'Employee Section'} />
                     </ListItemButton>
-                </ListItem>
+                </ListItem> */}
                 <ListItem disablePadding sx={{ borderLeft: url[1] == "pending" ? '3px solid white' : 'none' }} className='mt-2'>
                     <ListItemButton onClick={() => handleRoutes('pending')}>
                         <ListItemIcon>
