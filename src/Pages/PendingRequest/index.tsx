@@ -36,7 +36,8 @@ const PendingRequest = () => {
     const [rows, setRows] = useState<any>([]);
     const [open, setOpen] = React.useState(false);
     const [data, setData] = useState<any>({})
-    const [search, setSearch] = React.useState('')
+    const [search, setSearch] = React.useState('');
+    const [refresh, setRefresh] = React.useState(false);
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         setSearch(event.target.value);
     };
@@ -68,13 +69,15 @@ const PendingRequest = () => {
             .catch((err) => {
                 console.log(err);
             })
-    }, [10000])
+    }, [refresh])
 
     const handleAcceptLeave = (id: string) => {
         approveLeave(id)
             .then((res) => {
                 if (res.data) {
-                    alert("Approved Succesfully")
+                    alert("Approved Succesfully");
+                    setOpen(false);
+                    setRefresh(!refresh)
                 }
             })
             .catch((err) => {

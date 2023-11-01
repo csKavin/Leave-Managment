@@ -7,8 +7,9 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import { Button, TextField } from '@mui/material';
-import { applyLeave } from '../../Apiservice/apiservice';
-
+import { applyLeave, getLeave } from '../../Apiservice/apiservice';
+import Loader from '../../Components/Loader';
+import { useNavigate } from 'react-router-dom';
 
 
 const useStyles = makeStyles((theme: any) => ({
@@ -25,16 +26,23 @@ interface IApplyLeave {
     end_date: string | any,
     leave_type: string,
     description: string,
-    user_name : string | any,
-    email : string | any
+    user_name: string | any,
+    email: string | any
+}
+
+interface leaveType {
+    leavetype : string   
 }
 
 const ApplyLeave = () => {
     const classes = useStyles();
+    const navigate = useNavigate();
+    const [loader, setLoader] = React.useState(false);
     const [type, setType] = React.useState('');
     const [startDate, setStartDate] = React.useState<string | null>(null);
     const [endDate, setEndDate] = React.useState<string | null>(null);
     const [description, setDescription] = React.useState<string>('');
+    const [leave, setLeave] = React.useState([])
     const userName = localStorage.getItem("userName");
     const email = localStorage.getItem("email");
 
@@ -51,30 +59,51 @@ const ApplyLeave = () => {
         setDescription(event.target.value)
     }
 
+    React.useEffect(() => {
+        if(leave){
+            getLeave()
+            .then((res) => {
+                if (res.data)
+                    setLeave(res.data)
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        }
+      
+    },[])
+
     const handleApplyLeave = () => {
+        setLoader(true);
         let payload: IApplyLeave = {
             start_date: startDate,
             end_date: endDate,
             leave_type: type,
             description: description,
-            user_name : userName,
-            email : email
+            user_name: userName,
+            email: email
         }
         applyLeave(payload)
             .then((res) => {
-                if(res.data){
-                    alert("Leave Applied Successfully")
-                    console.log(res);
+                if (res.data) {
+                    alert("Leave Applied Successfully");
+                    setStartDate('');
+                    setEndDate('');
+                    setDescription('');
+                    setType('');
+                    setLoader(false);
+                    navigate('/leavehistory')
                 }
-                
             })
             .catch((err) => {
+                setLoader(false);
                 console.log(err);
             })
     }
 
     return (
         <div>
+         <Loader loading={loader} />
             <div className={`p-4 ${classes.container}`}>
                 <div className='fw-bold text-center'>Employee Leave Form</div>
                 <div className='mt-4'>please fill up the form below</div>
@@ -97,9 +126,9 @@ const ApplyLeave = () => {
                         value={type}
                         onChange={handleChange}
                     >
-                        <MenuItem value={'Ten'}>Ten</MenuItem>
-                        <MenuItem value={'Twenty'}>Twenty</MenuItem>
-                        <MenuItem value={'Thirty'}>Thirty</MenuItem>
+                        {leave.map((item : leaveType, index : number) => {
+                          return  <MenuItem value={item.leavetype}>{item.leavetype}</MenuItem>
+                        })}
                     </Select>
                 </FormControl>
                 <div className='mt-4'> Describe Your condition</div>

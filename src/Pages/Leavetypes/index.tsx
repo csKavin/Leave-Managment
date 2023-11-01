@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Button, FormControl, TextField, Typography } from '@mui/material';
 import Modal from '@mui/material/Modal';
+import { getLeave, postLeave } from '../../Apiservice/apiservice';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -20,46 +21,92 @@ const style = {
 const columns: GridColDef[] = [
     { field: 'id', headerName: 'S.N', width: 100 },
     {
-        field: 'firstName',
+        field: 'leaveType',
+        headerName: 'Leave Type',
+        editable: false,
+        minWidth: 300
+    },
+    {
+        field: 'description',
         headerName: ' Description',
         editable: false,
         // minWidth:300,
         flex: 1
     },
     {
-        field: 'lastName',
-        headerName: 'Leave Type',
-        editable: false,
-        minWidth: 300
-    },
-    {
-        field: 'age',
+        field: 'createDate',
         headerName: 'Created',
         // type: 'number',
         editable: false,
         minWidth: 300
-
     }
 ];
 
-const rows = [
-    { id: 1, lastName: 'Casual Leave', firstName: 'Provided for urgent or unforeseen matters to the employees ', age: '2023-11-01 17:07:24' },
-    { id: 2, lastName: 'Medical Leave', firstName: 'Related to Health Problems', age: '2023-11-01 17:07:24' },
-    { id: 3, lastName: 'Restricted Holiday', firstName: 'Holiday that is optional', age: '2023-11-01 17:07:24' },
-    { id: 4, lastName: 'Paternity Leave', firstName: 'To take care of new borns ', age: '2023-11-01 17:07:24' },
-    { id: 5, lastName: 'Bereavement Leave', firstName: 'Grieve their loss of losing loved ones', age: '2023-11-01 17:07:24' },
-    { id: 6, lastName: 'Componsatory Leave', firstName: 'For overtime workers ', age: '2023-11-01 17:07:24' },
-    { id: 7, lastName: 'Maternity Leave', firstName: 'Provided for urgent or unforeseen matters to the employees ', age: '2023-11-01 17:07:24' },
-];
+interface leaveData {
+    id: number,
+    leaveType: string,
+    description: string,
+    createDate: string
+}
+interface leaveany {
+    id: number,
+    leavetype: string,
+    content: string,
+    createdAt: string
+}
 
 export default function LeaveTypes() {
     const [open, setOpen] = React.useState(false);
-    const [search, setSearch] = React.useState('')
+    const [data, setData] = React.useState<leaveData[]>([]);
+    const [search, setSearch] = React.useState('');
+    const [payload, setPayload] = React.useState({
+        leavetype : "",
+        content : ""
+    })
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         setSearch(event.target.value);
     };
+
+    React.useEffect(() => {
+        getLeave()
+            .then((res) => {
+                if (res.data) {
+                    let response = res.data;
+                    let tempArray: leaveData[] = response.map((res: leaveany, index: number) => ({
+                        id: index + 1,
+                        leaveType: res.leavetype,
+                        description: res.content,
+                        createDate: res.createdAt
+                    }))
+                    setData(tempArray)
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+    },[])
+
+    const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+        const { name, value } = event.target;
+        setPayload((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
+
+    const handleSave = () => {
+        postLeave(payload)
+            .then((res) => {
+                console.log(res);
+                alert("ok")
+            })
+            .catch((err) => {
+                console.log(err);
+
+            })
+    }
 
     return (
         <React.Fragment>
@@ -68,7 +115,7 @@ export default function LeaveTypes() {
             <div className='d-flex justify-content-end gap-3 align-items-center'>
 
                 <Typography className='fw-bold' sx={{ color: 'theme.main' }} >Search</Typography>
-                    <TextField placeholder='By Leave Type' onChange={handleChange} />
+                <TextField placeholder='By Leave Type' onChange={handleChange} />
 
             </div>
             <Box className='mt-4'>
@@ -76,7 +123,7 @@ export default function LeaveTypes() {
                     sx={{
                         width: '100%',
                     }}
-                    rows={rows.filter(item => item.lastName.toLowerCase().includes(search.toLowerCase()))}
+                    rows={data.filter((item: any) => item?.leaveType.toLowerCase().includes(search.toLowerCase()))}
                     columns={columns}
                     rowHeight={50}
                     initialState={{
@@ -105,12 +152,12 @@ export default function LeaveTypes() {
             >
                 <Box sx={style}>
                     <Typography sx={{ color: 'theme.main' }}>Leave Type</Typography>
-                    <TextField className='w-100 mt-2' />
+                    <TextField className='w-100 mt-2' name='leavetype' required onChange={handleOnChange} />
                     <Typography sx={{ color: 'theme.main' }} className='mt-4'>Description</Typography>
-                    <TextField className='w-100 mt-2' />
+                    <TextField className='w-100 mt-2' name='content' required onChange={handleOnChange} />
                     <div className='d-flex justify-content-end mt-4 gap-3'>
                         <Button onClick={handleClose}>Cancel</Button>
-                        <Button>Add Leave</Button>
+                        <Button onClick={handleSave}>Add Leave</Button>
                     </div>
                 </Box>
             </Modal>
