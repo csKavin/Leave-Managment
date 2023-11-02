@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Button, FormControl, TextField, Typography } from '@mui/material';
 import Modal from '@mui/material/Modal';
-import { getLeave, postLeave } from '../../Apiservice/apiservice';
+import { getLeave, postLeave, deleteLeave } from '../../Apiservice/apiservice';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -43,12 +43,14 @@ const columns: GridColDef[] = [
 ];
 
 interface leaveData {
+    userId: string,
     id: number,
     leaveType: string,
     description: string,
     createDate: string
 }
 interface leaveany {
+    _id: string,
     id: number,
     leavetype: string,
     content: string,
@@ -59,9 +61,10 @@ export default function LeaveTypes() {
     const [open, setOpen] = React.useState(false);
     const [data, setData] = React.useState<leaveData[]>([]);
     const [search, setSearch] = React.useState('');
+    const [selected, setSelected] = React.useState<number | null>();
     const [payload, setPayload] = React.useState({
-        leavetype : "",
-        content : ""
+        leavetype: "",
+        content: ""
     })
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -74,7 +77,10 @@ export default function LeaveTypes() {
             .then((res) => {
                 if (res.data) {
                     let response = res.data;
+                    console.log("responseLion", response);
+
                     let tempArray: leaveData[] = response.map((res: leaveany, index: number) => ({
+                        userId: res?._id,
                         id: index + 1,
                         leaveType: res.leavetype,
                         description: res.content,
@@ -86,7 +92,7 @@ export default function LeaveTypes() {
             .catch((err) => {
                 console.log(err);
             })
-    },[])
+    }, [])
 
     const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         const { name, value } = event.target;
@@ -106,6 +112,24 @@ export default function LeaveTypes() {
                 console.log(err);
 
             })
+    }
+
+    const handleDelete = () => {
+        if (selected) {
+            let tempObject = data[selected-1]
+            let id: string = tempObject?.userId;            
+            if (id) {
+                deleteLeave(id)
+                    .then((res) => {
+                        if (res.data) {
+                            alert("deleted successfully")
+                        }
+                    })
+                    .catch((err) => {
+                        alert("something went wrong")
+                    })
+            }
+        }
     }
 
     return (
@@ -135,13 +159,13 @@ export default function LeaveTypes() {
                     }}
                     pageSizeOptions={[10]}
                     autoHeight={true}
-                    checkboxSelection
-                    onRowSelectionModelChange={(newRowSelectionModel) => {
-                        console.log(newRowSelectionModel);
+                    onRowSelectionModelChange={(row) => {
+                        let data: any = row[0];
+                        setSelected(data)
                     }}
                 />
                 <div className='d-flex justify-content-end mt-4 '>
-                    <Button onClick={handleClose}>Delete Leave Type</Button>
+                    <Button onClick={handleDelete}>Delete Leave Type</Button>
                 </div>
             </Box>
             <Modal

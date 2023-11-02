@@ -109,3 +109,14 @@ export const postLeave = async (data: IPostLeave): Promise<AxiosResponse> => {
   const res: AxiosResponse = await instance.post(path, data);
   return res;
 };
+
+//delete leave
+
+export const deleteLeave = async (id : string): Promise<AxiosResponse> => {
+  
+  const path = `/api/deleteLeave/${id}`;
+  const res: AxiosResponse = await instance.delete(path);
+  return res;
+};
+
+

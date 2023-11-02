@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { pendingRequest, approveLeave } from '../../Apiservice/apiservice';
-import { DataGrid, GridColDef, GridValueGetterParams, GridRowParams } from '@mui/x-data-grid';
+import { pendingRequest } from '../../Apiservice/apiservice';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Button, Typography, TextField, Grid } from '@mui/material';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
@@ -136,9 +136,7 @@ const PendingRequest = () => {
                         },
                     }}
                     pageSizeOptions={[10]}
-                    // checkboxSelection
                     onRowSelectionModelChange={(newRowSelectionModel) => {
-                        // setRowSelectionModel(newRowSelectionModel);
                         console.log(newRowSelectionModel);
                     }}
                 /> : <Typography className='text-center'>No Approved leave request</Typography>
