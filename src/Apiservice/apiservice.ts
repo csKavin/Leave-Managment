@@ -61,6 +61,13 @@ export const userSignUp = async (payload: ISignUp): Promise<AxiosResponse> => {
   return res;
 };
 
+//Login user
+export const dashboard = async (): Promise<AxiosResponse> => {
+  const path = `${BACKENDURL}/api/contacts/dashboard`;
+  const res: AxiosResponse = await instance.get(path);
+  return res;
+};
+
 //Apply Leave
 export const applyLeave = async (payload: IApplyLeave): Promise<AxiosResponse> => {
   const path = `/api/contacts`;
@@ -111,9 +118,7 @@ export const postLeave = async (data: IPostLeave): Promise<AxiosResponse> => {
 };
 
 //delete leave
-
 export const deleteLeave = async (id : string): Promise<AxiosResponse> => {
-  
   const path = `/api/deleteLeave/${id}`;
   const res: AxiosResponse = await instance.delete(path);
   return res;

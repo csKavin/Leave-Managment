@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: any) => ({
     }
 }))
 
-const DashBoardCard = (props: Data) => {
+const DashBoardCard = (props: Data) => {    
     const classes = useStyles();
     const navigate = useNavigate();
     const handleClick = (x: string) => {

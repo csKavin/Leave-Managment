@@ -41,35 +41,46 @@ const PendingRequest = () => {
     setSearch(event.target.value);
   };
   const handleOpen = (params: any) => {
-    console.log(params);
-    setData(params);
+    console.log(params, "params");
+    // if (params) {
+      let id = params.id;
+      let tempArray = rows[id - 1];
+      console.log(tempArray,"tempArray");
+      
+    // }
+    // setData(params.id);
     setOpen(true);
   }
   const handleClose = () => setOpen(false);
 
   useEffect(() => {
-    const userId: any = localStorage.getItem("userId")
-    getLeaveIndividual(userId)
-      .then((res) => {
-        let response = res.data;
-        let tempArray: responseArray[] = response.map((response: responseArray, index: number) => ({
-          id: index + 1,
-          _id: response._id,
-          startDate: response.startDate,
-          endDate: response.endDate,
-          status: response.status,
-          leave_type: response.leave_type,
-          description: response.description,
-          createdAt: response.createdAt,
-          user_name: response.user_name,
-          email: response.email
-        }));
-        setRows(tempArray)
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-  }, [10000])
+    const userIds: any = localStorage.getItem("userId")
+    if (rows) {
+      getLeaveIndividual(userIds)
+        .then((res) => {
+          console.log(res.data);
+
+          let response = res.data;
+          let tempArray: responseArray[] = response.map((response: responseArray, index: number) => ({
+            id: index + 1,
+            _id: response._id,
+            startDate: response.startDate,
+            endDate: response.endDate,
+            status: response.status,
+            leave_type: response.leave_type,
+            description: response.description,
+            createdAt: response.createdAt,
+            user_name: response.user_name,
+            email: response.email
+          }));
+          setRows(tempArray)
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+    }
+
+  }, [setRows])
 
 
   const columns: GridColDef[] = [
@@ -120,7 +131,7 @@ const PendingRequest = () => {
       description: 'This column has a value getter and is not sortable.',
       width: 200,
       renderCell: (params) => (
-        <Button onClick={() => handleOpen(params.row)}>
+        <Button onClick={() => handleOpen(params.rowNode)}>
           View more
         </Button>
       )
@@ -130,7 +141,7 @@ const PendingRequest = () => {
 
   return (
     <React.Fragment>
-      <Typography sx={{ flexGrow: 1, color: 'theme.main', fontWeight: 'bold' }}>Pending Request</Typography>
+      <Typography sx={{ flexGrow: 1, color: 'theme.main', fontWeight: 'bold' }}>Your History</Typography>
       <div className='d-flex justify-content-end gap-3 align-items-center'>
         <Typography className='fw-bold' sx={{ color: 'theme.main' }} >Search</Typography>
         <TextField placeholder='By name' onChange={handleChange} />
@@ -179,11 +190,11 @@ const PendingRequest = () => {
             </Grid>
             <Grid item xs={4}>
               <Typography className='fw-bold'>Start Date</Typography>
-              <Typography>{`${data.startDate}`}</Typography>
+              <Typography>{data.startDate}</Typography>
             </Grid>
             <Grid item xs={4}>
               <Typography className='fw-bold'>End Date</Typography>
-              <Typography>{`${data.endDate}`}</Typography>
+              <Typography>{data.endDate}</Typography>
             </Grid>
             <Grid item xs={4}>
               <Typography className='fw-bold'>Status</Typography>

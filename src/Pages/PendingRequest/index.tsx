@@ -88,7 +88,9 @@ const PendingRequest = () => {
         rejectLeave(id)
             .then((res) => {
                 if (res.data) {
-                    alert("Rejected Succesfully")
+                    setOpen(false);
+                    alert("Rejected Succesfully");
+                    setRefresh(!refresh)
                 }
             })
             .catch((err) => {

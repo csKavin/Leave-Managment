@@ -61,6 +61,7 @@ export default function LeaveTypes() {
     const [open, setOpen] = React.useState(false);
     const [data, setData] = React.useState<leaveData[]>([]);
     const [search, setSearch] = React.useState('');
+    const [refresh, setRefresh] = React.useState(false);
     const [selected, setSelected] = React.useState<number | null>();
     const [payload, setPayload] = React.useState({
         leavetype: "",
@@ -92,7 +93,7 @@ export default function LeaveTypes() {
             .catch((err) => {
                 console.log(err);
             })
-    }, [])
+    }, [refresh])
 
     const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         const { name, value } = event.target;
@@ -105,8 +106,9 @@ export default function LeaveTypes() {
     const handleSave = () => {
         postLeave(payload)
             .then((res) => {
-                console.log(res);
-                alert("ok")
+                handleClose();
+                setRefresh(!refresh)
+                alert("saved successfully")
             })
             .catch((err) => {
                 console.log(err);
@@ -122,7 +124,9 @@ export default function LeaveTypes() {
                 deleteLeave(id)
                     .then((res) => {
                         if (res.data) {
-                            alert("deleted successfully")
+                            alert("deleted successfully");
+                            handleClose();
+                            setRefresh(!refresh)
                         }
                     })
                     .catch((err) => {

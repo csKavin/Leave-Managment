@@ -47,10 +47,10 @@ const ApplyLeave = () => {
     const email = localStorage.getItem("email");
 
     const handleStartDate = (date: any) => {
-        setStartDate(date.toString());
+        setStartDate(date);
     };
     const handleEndDate = (date: any) => {
-        setEndDate(date.toString());
+        setEndDate(date);
     };
     const handleChange = (event: any) => {
         setType(event.target.value);
