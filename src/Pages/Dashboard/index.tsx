@@ -1,6 +1,7 @@
 import { Grid, Typography } from '@mui/material'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import DashBoardCard from '../../Components/DashBoardCard'
+import { dashboard } from '../../Apiservice/apiservice'
 
 interface cardDetails {
   heading: string,
@@ -9,11 +10,21 @@ interface cardDetails {
   history: string
 }
 
-const index = () => {
+const Index = () => {
+  const [data, setData] = useState<any>([])
+  useEffect(()=>{
+    dashboard()
+    .then((res)=>{
+      setData(res.data)
+    })
+    .catch((err)=>{
+      alert("something went wrong")
+    })
+  },[setData])
   const cardDetails: cardDetails[] = [
     {
       heading: 'Available Leave Types',
-      Total: 12,
+      Total: data.totalLeave,
       subHeading: 'Leave Types',
       history: 'leavetypes'
     },
@@ -24,23 +35,24 @@ const index = () => {
     // },
     {
       heading: 'Pending Application',
-      Total: 5,
+      Total:data.pendingLeave,
       subHeading: 'Pending',
       history: 'pending'
     },
     {
       heading: 'Declined Application',
-      Total: 4,
+      Total: data.rejectedLeave,
       subHeading: 'Declined',
       history: 'approve'
     },
     {
       heading: 'Approved Application',
-      Total: 9,
+      Total: data.approvedLeave,
       subHeading: 'Approved',
       history: 'declined'
     },
   ]
+  
   return (
     <React.Fragment>
       <Typography sx={{ flexGrow: 1, color: 'theme.main', fontWeight: 'bold' }}>Dashboard</Typography>
@@ -58,4 +70,4 @@ const index = () => {
   )
 }
 
-export default index
+export default Index

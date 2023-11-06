@@ -41,14 +41,7 @@ const PendingRequest = () => {
     setSearch(event.target.value);
   };
   const handleOpen = (params: any) => {
-    console.log(params, "params");
-    // if (params) {
-      let id = params.id;
-      let tempArray = rows[id - 1];
-      console.log(tempArray,"tempArray");
-      
-    // }
-    // setData(params.id);
+    setData(params);
     setOpen(true);
   }
   const handleClose = () => setOpen(false);
@@ -131,7 +124,7 @@ const PendingRequest = () => {
       description: 'This column has a value getter and is not sortable.',
       width: 200,
       renderCell: (params) => (
-        <Button onClick={() => handleOpen(params.rowNode)}>
+        <Button onClick={() => handleOpen(params.row)}>
           View more
         </Button>
       )
@@ -190,11 +183,11 @@ const PendingRequest = () => {
             </Grid>
             <Grid item xs={4}>
               <Typography className='fw-bold'>Start Date</Typography>
-              <Typography>{data.startDate}</Typography>
+              <Typography>{`${data.startDate}`}</Typography>
             </Grid>
             <Grid item xs={4}>
               <Typography className='fw-bold'>End Date</Typography>
-              <Typography>{data.endDate}</Typography>
+              <Typography>{`${data.endDate}`}</Typography>
             </Grid>
             <Grid item xs={4}>
               <Typography className='fw-bold'>Status</Typography>
